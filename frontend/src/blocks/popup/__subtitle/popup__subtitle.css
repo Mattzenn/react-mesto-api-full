@@ -1,0 +1,15 @@
+.popup__subtitle {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16.94px;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    transition: .2s;
+}
+
+.popup__subtitle:hover {
+    opacity: .6;
+    cursor: pointer;
+}

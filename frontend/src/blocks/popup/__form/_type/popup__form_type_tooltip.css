@@ -1,0 +1,4 @@
+.popup__form_type_tooltip {
+    align-items: center;
+    max-width: calc(100% - 72px);
+}
