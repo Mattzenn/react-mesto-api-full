@@ -21,7 +21,8 @@ const rateLimit = require('express-rate-limit');
 
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  'localhost:3000',
+  'http://localhost:3000',
+  'http://localhost:3001/signup'
 ];
 
 app.use((req, res, next) => {

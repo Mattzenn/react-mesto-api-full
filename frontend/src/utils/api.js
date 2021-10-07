@@ -15,6 +15,7 @@ class Api {
 
     getCards() {
         return fetch(this._url + '/cards', {
+            credentials: 'include',
             method: 'GET',
             headers: this._headers
         })
@@ -23,6 +24,7 @@ class Api {
 
     getApiUserInfo() {
         return fetch(this._url + '/users/me', {
+            credentials: 'include',
             method: 'GET',
             headers: this._headers
         })
@@ -31,6 +33,7 @@ class Api {
 
     setApiUserInfo(newdata) {
         return fetch(this._url + '/users/me', {
+            credentials: 'include',
             method: 'PATCH',
             headers: this._headers,
             body: JSON.stringify({
@@ -43,6 +46,7 @@ class Api {
 
     postCards(data) {
         return fetch(this._url + '/cards', {
+            credentials: 'include',
             method: 'POST',
             headers: this._headers,
             body: JSON.stringify({
@@ -55,6 +59,7 @@ class Api {
 
     deleteCard(data) {
         return fetch(this._url + `/cards/${data}`, {
+            credentials: 'include',
             method: 'DELETE',
             headers: this._headers,
         })
@@ -63,6 +68,7 @@ class Api {
 
     setAvatar(data) {
         return fetch(this._url + '/users/me/avatar', {
+            credentials: 'include',
             method: 'PATCH',
             headers: this._headers,
             body: JSON.stringify({
@@ -73,7 +79,8 @@ class Api {
     }
 
     changeLikeCardStatus(id, isLiked) {
-        return fetch(this._url + `/cards/likes/${id}`, {
+        return fetch(this._url + `/cards/${id}/likes`, {
+            credentials: 'include',
             method: `${isLiked ? 'PUT' : 'DELETE'}`,
             headers: this._headers
         })
@@ -82,6 +89,7 @@ class Api {
 
     deleteLike(data) {
         return fetch(this._url + `/cards/likes/${data}`, {
+            credentials: 'include',
             method: 'DELETE',
             headers: this._headers,
         })
@@ -93,7 +101,7 @@ const api = new Api({
     url: 'http://localhost:3001',
     credentials: 'include',
     headers: {
-        authorization: '664aaf42-3a4d-4948-aa52-e5498063f0fe',
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
         'Content-Type': 'application/json',
     }
 })
