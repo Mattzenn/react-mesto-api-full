@@ -34,9 +34,10 @@ function App() {
     const [message, setMessage] = React.useState({ img: '', text: '' })
 
     React.useEffect(() => {
-        api.getApiUserInfo().then((user) => {
-            setCurrentUser(user.data)
-        })
+        api.getApiUserInfo()
+            .then((user) => {
+                setCurrentUser(user.data)
+            })
             .catch((err) => console.log(err))
     }, [])
 
@@ -70,7 +71,9 @@ function App() {
     function handleAddPlaceSubmit(cardData) {
         api.postCards(cardData)
             .then((newCard) => {
-                setCards([newCard.data, ...cards]);
+                console.log(newCard);
+                console.log(cards);
+                setCards([newCard, ...cards]);
                 closeAllPopups()
             })
             .catch((err) => console.log(err))
@@ -83,7 +86,7 @@ function App() {
         // Отправляем запрос в API и получаем обновлённые данные карточки
         api.changeLikeCardStatus(card._id, !isLiked)
             .then((newCard) => {
-                setCards((state) => state.map((c) => c._id === card._id ? newCard.data : c));
+                setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
             })
             .catch((err) => console.log(err))
     }
@@ -138,16 +141,15 @@ function App() {
     }, [])
 
     function tokenCheck() {
-        const jwt = localStorage.getItem('jwt')
+        const jwt = localStorage.getItem('token')
+        console.log(jwt)
 
         if (jwt) {
-            auth.checkToken(jwt)
+            auth.getContent(jwt)
                 .then((res) => {
-                    if (res) {
-                        setLoggedIn(true)
-                        setEmail(res.data.email)
-                        history.push('/')
-                    }
+                    setLoggedIn(true)
+                    setEmail(res.data.email)
+                    history.push('/')
                 })
                 .catch((err) => console.log(err))
         }
@@ -166,9 +168,10 @@ function App() {
 
     function handleAuth(password, email) {
         auth.authorize(password, email)
-            .then((data) => {
+            .then(() => {
+
                 setLoggedIn(true)
-                localStorage.setItem('jwt', data.token)
+                // localStorage.setItem('jwt', token)
                 history.push('/')
                 setEmail(email)
             })

@@ -29,7 +29,6 @@ const createCard = (req, res, next) => {
 const deleteCard = (req, res, next) => {
   const userId = req.user._id;
   const { _id } = req.params;
-  console.log(_id);
 
   Card.findById(_id)
     .orFail()
@@ -54,7 +53,8 @@ const likeCard = (req, res, next) => {
     .orFail(() => {
       throw new NotFound('Карточка с таким id не найдена');
     })
-    .then((likes) => res.send({ data: likes }))
+    .then((likes) => res.send( likes ))
+    // .then((likes) => res.send({ data: likes }))
     .catch(next);
 };
 
@@ -66,7 +66,8 @@ const dislikeCard = (req, res, next) => {
     .orFail(() => {
       throw new NotFound('Карточка с таким id не найдена');
     })
-    .then((likes) => res.send({ data: likes }))
+    .then((likes) => res.send( likes ))
+    // .then((likes) => res.send({ data: likes }))
     .catch(next);
 };
 
