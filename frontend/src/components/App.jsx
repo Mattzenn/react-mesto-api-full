@@ -44,8 +44,9 @@ function App() {
     React.useEffect(() => {
 
         api.getCards()
-            .then((data) => {
-                setCards(data)
+            .then((cards) => {
+                console.log(cards);
+                setCards(cards.reverse())
             })
             .catch((err) => console.log(err))
     }, [])
@@ -72,6 +73,7 @@ function App() {
         api.postCards(cardData)
             .then((newCard) => {
                 console.log(newCard);
+                console.log(cards.data);
                 console.log(cards);
                 setCards([newCard, ...cards]);
                 closeAllPopups()
