@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const myCors = require('./middlewares/myCors');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { loginValidation, userValidation } = require('./middlewares/validate');
@@ -14,12 +15,14 @@ const helmet = require('helmet');
 
 // origin: ['http://mattzenn.nomoredomains.club', 'https://mattzenn.nomoredomains.club', 'localhost:3001', 'http://api.mattzenn.nomoredomains.club', 'https://api.mattzenn.nomoredomains.club']
 
-app.use(cors({
-  origin: "*",
-  methods: ['GET', 'POST','PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}));
+app.use(myCors);
+
+// app.use(cors({
+//   origin: "*",
+//   methods: ['GET', 'POST','PUT', 'DELETE', 'PATCH'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+//   credentials: true,
+// }));
 
 const app = express();
 const NotFound = require('./errors/NotFound');
@@ -28,6 +31,7 @@ const { PORT = 3001 } = process.env;
 
 // eslint-disable-next-line import/order
 const rateLimit = require('express-rate-limit');
+const myCors = require('./middlewares/myCors');
 
 
 
