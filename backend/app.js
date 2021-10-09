@@ -94,6 +94,8 @@ app.use(helmet());
 
 app.use(cors({
   origin: ['http://mattzenn.nomoredomains.club', 'https://mattzenn.nomoredomains.club'],
+  methods: ['GET', 'POST','PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
 // app.use(cors(options));
