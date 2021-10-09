@@ -29,7 +29,7 @@ app.options('*', cors());
 const app = express();
 const NotFound = require('./errors/NotFound');
 // Слушаем 3000 порт
-const { PORT = 3001 } = process.env;
+const { PORT = 3000 } = process.env;
 
 // eslint-disable-next-line import/order
 const rateLimit = require('express-rate-limit');
