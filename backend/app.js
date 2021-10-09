@@ -13,7 +13,7 @@ const { loginValidation, userValidation } = require('./middlewares/validate');
 const helmet = require('helmet');
 
 app.use(cors({
-  origin: ['http://mattzenn.nomoredomains.club', 'https://mattzenn.nomoredomains.club', 'localhost:3000'],
+  origin: ['http://mattzenn.nomoredomains.club', 'https://mattzenn.nomoredomains.club', 'localhost:3000', 'http://api.mattzenn.nomoredomains.club', 'https://api.mattzenn.nomoredomains.club'],
   methods: ['GET', 'POST','PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
