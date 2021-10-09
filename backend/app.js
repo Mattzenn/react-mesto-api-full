@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
-const myCors = require('./middlewares/myCors');
+// const myCors = require('./middlewares/myCors');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { loginValidation, userValidation } = require('./middlewares/validate');
@@ -15,8 +15,10 @@ const helmet = require('helmet');
 
 // origin: ['http://mattzenn.nomoredomains.club', 'https://mattzenn.nomoredomains.club', 'localhost:3001', 'http://api.mattzenn.nomoredomains.club', 'https://api.mattzenn.nomoredomains.club']
 
-app.use(myCors);
+// app.use(myCors);
 
+app.use(cors());
+app.options('*', cors());
 // app.use(cors({
 //   origin: "*",
 //   methods: ['GET', 'POST','PUT', 'DELETE', 'PATCH'],
