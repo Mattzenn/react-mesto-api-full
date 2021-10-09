@@ -12,8 +12,10 @@ const { loginValidation, userValidation } = require('./middlewares/validate');
 // eslint-disable-next-line import/order
 const helmet = require('helmet');
 
+// origin: ['http://mattzenn.nomoredomains.club', 'https://mattzenn.nomoredomains.club', 'localhost:3001', 'http://api.mattzenn.nomoredomains.club', 'https://api.mattzenn.nomoredomains.club']
+
 app.use(cors({
-  origin: ['http://mattzenn.nomoredomains.club', 'https://mattzenn.nomoredomains.club', 'localhost:3001', 'http://api.mattzenn.nomoredomains.club', 'https://api.mattzenn.nomoredomains.club'],
+  origin: "*",
   methods: ['GET', 'POST','PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
