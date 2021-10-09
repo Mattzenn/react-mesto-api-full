@@ -32,24 +32,33 @@ function App() {
     const [email, setEmail] = React.useState('')
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false)
     const [message, setMessage] = React.useState({ img: '', text: '' })
+    const [token, setToken] = React.useState('')
 
     React.useEffect(() => {
-        api.getApiUserInfo()
-            .then((user) => {
-                setCurrentUser(user.data)
-            })
-            .catch((err) => console.log(err))
-    }, [])
+        if (loggedIn) {
+            const jwt = localStorage.getItem('token')
+            console.log(`этот токен на фронте я отправляю на запрос с фронта после логина ${jwt}`)
+
+            auth.ApiUserInfo(jwt)
+                .then((user) => {
+                    setCurrentUser(user.data)
+                    console.log(user.data)
+                })
+                .catch((err) => console.log(err))
+        }
+
+    }, [loggedIn])
 
     React.useEffect(() => {
-
-        api.getCards()
-            .then((cards) => {
-                console.log(cards);
-                setCards(cards.reverse())
-            })
-            .catch((err) => console.log(err))
-    }, [])
+        if (loggedIn) {
+            api.getCards()
+                .then((cards) => {
+                    console.log(cards);
+                    setCards(cards.reverse())
+                })
+                .catch((err) => console.log(err))
+        }
+    }, [loggedIn])
 
     function onUpdateUser(userData) {
         api.setApiUserInfo(userData)
@@ -144,7 +153,7 @@ function App() {
 
     function tokenCheck() {
         const jwt = localStorage.getItem('token')
-        console.log(jwt)
+        console.log(`точно точно точно он? ${jwt}`)
 
         if (jwt) {
             auth.getContent(jwt)
@@ -156,6 +165,21 @@ function App() {
                 .catch((err) => console.log(err))
         }
     }
+
+    // function tokenCheck() {
+    //     const jwt = localStorage.getItem('token')
+    //     console.log(jwt)
+
+    //     if (jwt) {
+    //         auth.getContent(jwt)
+    //             .then((res) => {
+    //                 setLoggedIn(true)
+    //                 setEmail(res.data.email)
+    //                 history.push('/')
+    //             })
+    //             .catch((err) => console.log(err))
+    //     }
+    // }
 
     function handleRegistration(password, email) {
         auth.register(password, email)
@@ -170,10 +194,14 @@ function App() {
 
     function handleAuth(password, email) {
         auth.authorize(password, email)
-            .then(() => {
+            .then((result) => {
+                console.log(`этоооооооо онннннннн на фронте ${result.token}`)
 
+                localStorage.setItem('token', result.token)
+                const ttt = localStorage.getItem('token');
+
+                console.log(ttt);
                 setLoggedIn(true)
-                // localStorage.setItem('jwt', token)
                 history.push('/')
                 setEmail(email)
             })
@@ -181,9 +209,14 @@ function App() {
     }
 
     function onSignOut() {
-        localStorage.removeItem('jwt')
+        localStorage.removeItem('token')
+        setToken('')
+        const jwt = localStorage.getItem('token');
+        console.log(jwt)
         setLoggedIn(false)
+
     }
+
 
     return (
         <CurrentUserContext.Provider value={currentUser}>

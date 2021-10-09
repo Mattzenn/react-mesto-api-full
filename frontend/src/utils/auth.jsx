@@ -1,5 +1,5 @@
 export const BASE_URL = 'http://localhost:3001'
-const jwt = localStorage.getItem('token')
+// const jwt = localStorage.getItem('token')
 
 const handleResponse = response => response.ok ? response.json() : Promise.reject(`Ошибка ${response.status}`)
 
@@ -8,7 +8,7 @@ export const register = (password, email) => {
         method: 'POST',
 
         headers: {
-            Authorization: `Bearer ${jwt}`,
+            // Authorization: `Bearer ${jwt}`,
             "Content-Type": "application/json",
         },
         body: JSON.stringify({ password: password, email: email })
@@ -21,13 +21,13 @@ export const authorize = (password, email) => {
         method: 'POST',
 
         headers: {
-            Authorization: `Bearer ${jwt}`,
+            // Authorization: `Bearer ${jwt}`,
             "Content-Type": "application/json",
         },
         body: JSON.stringify({ password: password, email: email })
     })
         .then(handleResponse)
-        .then(data => localStorage.setItem('jwt', data.token))
+
 }
 
 export const getContent = (token) => {
@@ -42,4 +42,17 @@ export const getContent = (token) => {
         }
     })
         .then(handleResponse)
+}
+
+export const ApiUserInfo = (token) => {
+    return fetch(`${BASE_URL}/users/me`, {
+        method: 'GET',
+
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    })
+        .then(handleResponse)
+
 }

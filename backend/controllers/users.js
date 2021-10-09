@@ -91,7 +91,8 @@ const login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key' , { expiresIn: '7d' });
-      res.send({ token });
+      console.log(`этоооооооо онннннннн ${token}`)
+      res.send( { token} );
     })
     .catch(next);
 };
@@ -100,17 +101,6 @@ const getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
   console.log(` получаю ${userId}`);
   
-  // User.findById(req.params.id)
-  //   .orFail()
-  //   .then((user) => res.send({ data: user }))
-  //   .catch((err) => {
-  //     if (err.name === 'ValidationError' || err.name === 'CastError') {
-  //       const er = new BadRequest();
-  //       next(er);
-  //     } else {
-  //       next(err);
-  //     }
-  //   });
   User.findById(userId)
     .orFail()
     .catch(() => {
