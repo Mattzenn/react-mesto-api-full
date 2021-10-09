@@ -38,7 +38,7 @@ const helmet = require('helmet');
 const app = express();
 const NotFound = require('./errors/NotFound');
 // Слушаем 3000 порт
-const { PORT = 3001 } = process.env;
+const { PORT = 3000 } = process.env;
 
 // eslint-disable-next-line import/order
 const rateLimit = require('express-rate-limit');
@@ -93,7 +93,7 @@ app.use(helmet());
 
 
 app.use(cors({
-  origin: ['http://mattzenn.nomoredomains.club', 'https://mattzenn.nomoredomains.club'],
+  origin: ['http://mattzenn.nomoredomains.club', 'https://mattzenn.nomoredomains.club', 'localhost:3000'],
   methods: ['GET', 'POST','PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
