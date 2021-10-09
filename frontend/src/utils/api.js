@@ -94,7 +94,7 @@ const jwt = localStorage.getItem('token')
 console.log(`Это api ${jwt}`)
 
 const api = new Api({
-    url: 'http://localhost:3001',
+    url: 'http://api.mattzenn.nomoredomains.club',
     headers: {
         Authorization: `Bearer ${jwt}`,
         'Content-Type': 'application/json',
