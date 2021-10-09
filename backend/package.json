@@ -18,7 +18,9 @@
     "scripts": {
         "start": "node app.js",
         "dev": "nodemon app.js",
-        "lint": "npx eslint --fix --ext .js ."
+        "lint": "npx eslint --fix --ext .js .",
+        "deploy": "npm run build && scp -r ./build/* praktikum@62.84.120.7:/home/praktikum/react-mesto-api-full/frontend/build",
+        "build": "npm run build"
     },
     "devDependencies": {
         "eslint": "^7.32.0",
