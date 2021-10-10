@@ -51,20 +51,18 @@ const likeCard = (req, res, next) => {
       throw new NotFound('Карточка с таким id не найдена');
     })
     .then((likes) => res.send( likes ))
-    // .then((likes) => res.send({ data: likes }))
     .catch(next);
 };
 
 const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
-    req.params._id, { $pull: { likes: req.user._id } }, // убрать _id из массива
+    req.params._id, { $pull: { likes: req.user._id } }, 
     { new: true },
   )
     .orFail(() => {
       throw new NotFound('Карточка с таким id не найдена');
     })
     .then((likes) => res.send( likes ))
-    // .then((likes) => res.send({ data: likes }))
     .catch(next);
 };
 
