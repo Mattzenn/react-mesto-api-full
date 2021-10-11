@@ -12,7 +12,7 @@ const auth = require('./middlewares/auth');
 const { loginValidation, userValidation } = require('./middlewares/validate');
 // eslint-disable-next-line import/order
 const helmet = require('helmet');
-
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 
 
@@ -49,7 +49,9 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cookieParser());
+// app.use(cookieParser());
+
+app.use(requestLogger);
 
 app.post('/signup', userValidation, createUser);
 app.post('/signin', loginValidation, login);
@@ -61,6 +63,8 @@ app.use('/', auth, cardsRouter);
 app.use('*', () => {
   throw new NotFound('Запрашиваемый ресурс не найден');
 });
+
+app.use(errorLogger);
 
 // подключаемся к серверу mongo
 app.use(errors());
