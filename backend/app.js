@@ -20,10 +20,6 @@ const NotFound = require('./errors/NotFound');
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 
-app.use(cors());
-
-app.options('*', cors());
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -31,6 +27,9 @@ app.use(requestLogger);
 
 // eslint-disable-next-line import/order
 const rateLimit = require('express-rate-limit');
+
+app.use(cors());
+app.options('*', cors());
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
