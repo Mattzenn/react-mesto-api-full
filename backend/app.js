@@ -40,11 +40,11 @@ app.options('*', cors());
 app.use(limiter);
 app.use(helmet());
 
-// app.get('/crash-test', () => {
-//   setTimeout(() => {
-//     throw new Error('Сервер сейчас упадёт');
-//   }, 0);
-// });
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post('/signup', userValidation, createUser);
 app.post('/signin', loginValidation, login);
