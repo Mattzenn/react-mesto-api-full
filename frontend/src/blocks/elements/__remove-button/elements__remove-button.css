@@ -1,0 +1,21 @@
+.elements__remove-button {
+    padding: 0;
+    width: 22px;
+    height: 20px;
+    background-image: url(../../../images/Delicon.svg);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    border: none;
+    background-color: transparent;
+    transition: .2s;
+    position: absolute;
+    top: 18px;
+    right: 15px;
+    outline: none;
+}
+
+.elements__remove-button:hover {
+    opacity: .6;
+    cursor: pointer;
+}
