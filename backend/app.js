@@ -20,6 +20,10 @@ const NotFound = require('./errors/NotFound');
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 
+app.use(cors());
+
+app.options('*', cors());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -32,9 +36,6 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
 });
-
-app.use(cors());
-app.options('*', cors());
 
 //  apply to all requests
 app.use(limiter);
