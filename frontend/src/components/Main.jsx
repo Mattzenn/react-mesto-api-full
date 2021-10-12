@@ -26,12 +26,12 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, handleCard
             <section className="cards">
                 <ul className="elements">
                     {cards.map((card) => (
-                        <Card 
-                            key={card._id} 
-                            card={card} 
-                            onCardClick={onCardClick} 
-                            onCardLike={handleCardLike} 
-                            onCardDelete={handleCardDelete} 
+                        <Card
+                            key={card._id}
+                            card={card}
+                            onCardClick={onCardClick}
+                            onCardLike={handleCardLike}
+                            onCardDelete={handleCardDelete}
                         />
                     )
                     )}

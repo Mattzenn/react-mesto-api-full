@@ -32,26 +32,38 @@ function App() {
     const [email, setEmail] = React.useState('')
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false)
     const [message, setMessage] = React.useState({ img: '', text: '' })
+    const [token, setToken] = React.useState('')
 
     React.useEffect(() => {
-        api.getApiUserInfo().then((data) => {
-            setCurrentUser(data)
-        })
-            .catch((err) => console.log(err))
-    }, [])
+        if (loggedIn) {
+            const jwt = localStorage.getItem('token')
+            console.log(`этот токен на фронте я отправляю на запрос с фронта после логина ${jwt}`)
+
+            auth.ApiUserInfo(jwt)
+                .then((user) => {
+                    setCurrentUser(user.data)
+                    console.log(user.data)
+                })
+                .catch((err) => console.log(err))
+        }
+
+    }, [loggedIn])
 
     React.useEffect(() => {
-        api.getCards()
-            .then((data) => {
-                setCards(data)
-            })
-            .catch((err) => console.log(err))
-    }, [])
+        if (loggedIn) {
+            api.getCards()
+                .then((cards) => {
+                    console.log(cards);
+                    setCards(cards.reverse())
+                })
+                .catch((err) => console.log(err))
+        }
+    }, [loggedIn])
 
     function onUpdateUser(userData) {
         api.setApiUserInfo(userData)
-            .then((data) => {
-                setCurrentUser(data)
+            .then((user) => {
+                setCurrentUser(user.data)
                 closeAllPopups()
             })
             .catch((err) => console.log(err))
@@ -59,8 +71,8 @@ function App() {
 
     function onUpdateAvatar(userData) {
         api.setAvatar(userData)
-            .then((data) => {
-                setCurrentUser(data)
+            .then((user) => {
+                setCurrentUser(user.data)
                 closeAllPopups()
             })
             .catch((err) => console.log(err))
@@ -69,6 +81,9 @@ function App() {
     function handleAddPlaceSubmit(cardData) {
         api.postCards(cardData)
             .then((newCard) => {
+                console.log(newCard);
+                console.log(cards.data);
+                console.log(cards);
                 setCards([newCard, ...cards]);
                 closeAllPopups()
             })
@@ -77,14 +92,14 @@ function App() {
 
     function handleCardLike(card) {
         // Снова проверяем, есть ли уже лайк на этой карточке
-        const isLiked = card.likes.some(i => i._id === currentUser._id);
+        const isLiked = card.likes.some(id => id === currentUser._id);
 
         // Отправляем запрос в API и получаем обновлённые данные карточки
         api.changeLikeCardStatus(card._id, !isLiked)
             .then((newCard) => {
-            setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-        })
-        .catch((err) => console.log(err))
+                setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+            })
+            .catch((err) => console.log(err))
     }
 
     function handleCardDelete(card) {
@@ -121,80 +136,104 @@ function App() {
 
     React.useEffect(() => {
         const closeByEscape = (e) => {
-          if (e.key === 'Escape') {
-            closeAllPopups();
-          }
+            if (e.key === 'Escape') {
+                closeAllPopups();
+            }
         }
-  
+
         document.addEventListener('keydown', closeByEscape)
-        
+
         return () => document.removeEventListener('keydown', closeByEscape)
     }, [])
-  
+
 
     React.useEffect(() => {
         tokenCheck()
     }, [])
-   
+
     function tokenCheck() {
-        const jwt = localStorage.getItem('jwt')
-   
-        if(jwt) {
-          auth.checkToken(jwt)
-            .then((res) => {
-              if(res) {
-                setLoggedIn(true)
-                setEmail(res.data.email)
-                history.push('/')
-              }
-            })
-            .catch((err) => console.log(err))
+        const jwt = localStorage.getItem('token')
+        console.log(`точно точно точно он? ${jwt}`)
+
+        if (jwt) {
+            auth.getContent(jwt)
+                .then((res) => {
+                    setLoggedIn(true)
+                    setEmail(res.data.email)
+                    history.push('/')
+                })
+                .catch((err) => console.log(err))
         }
-      }
+    }
+
+    // function tokenCheck() {
+    //     const jwt = localStorage.getItem('token')
+    //     console.log(jwt)
+
+    //     if (jwt) {
+    //         auth.getContent(jwt)
+    //             .then((res) => {
+    //                 setLoggedIn(true)
+    //                 setEmail(res.data.email)
+    //                 history.push('/')
+    //             })
+    //             .catch((err) => console.log(err))
+    //     }
+    // }
 
     function handleRegistration(password, email) {
         auth.register(password, email)
-          .then((result) => {
-            setEmail(result.data.email)
-            setMessage({ img: Success, text: 'Вы успешно зарегистрировались!' })
-            history.push('/sign-in')
-          })
-          .catch(() => setMessage({ img: unSuccess, text: 'Что-то пошло не так! Попробуйте ещё раз.' }))
-          .finally(() => setIsInfoTooltipOpen(true))
-        }
-    
-        function handleAuth(password, email) {
-            auth.authorize(password, email)
-              .then((data) => {
+            .then((result) => {
+                setEmail(result.data.email)
+                setMessage({ img: Success, text: 'Вы успешно зарегистрировались!' })
+                history.push('/sign-in')
+            })
+            .catch(() => setMessage({ img: unSuccess, text: 'Что-то пошло не так! Попробуйте ещё раз.' }))
+            .finally(() => setIsInfoTooltipOpen(true))
+    }
+
+    function handleAuth(password, email) {
+        auth.authorize(password, email)
+            .then((result) => {
+                console.log(`этоооооооо онннннннн на фронте ${result.token}`)
+
+                localStorage.setItem('token', result.token)
+                const ttt = localStorage.getItem('token');
+
+                console.log(ttt);
                 setLoggedIn(true)
-                localStorage.setItem('jwt', data.token)
                 history.push('/')
                 setEmail(email)
-              })
-              .catch((err) => console.log(err))
-            }
-    
-      function onSignOut() {
-        localStorage.removeItem('jwt')
+            })
+            .catch((err) => console.log(err))
+    }
+
+    function onSignOut() {
+        localStorage.removeItem('token')
+        setToken('')
+        const jwt = localStorage.getItem('token');
+        console.log(jwt)
         setLoggedIn(false)
-      }
+
+    }
+
 
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <div className="page">
-                <Header loggedIn={loggedIn} email={email} onSignOut={onSignOut}/>
+                <Header loggedIn={loggedIn} email={email} onSignOut={onSignOut} />
                 <Switch>
-                    <ProtectedRoute exact path='/' loggedIn={loggedIn} component={Main} onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onCardClick={onCardClick} handleCardLike={handleCardLike} handleCardDelete={handleCardDelete} cards={cards}/>
+                    <ProtectedRoute exact path='/' loggedIn={loggedIn} component={Main} onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onCardClick={onCardClick} handleCardLike={handleCardLike} handleCardDelete={handleCardDelete} cards={cards} />
                     <Route path='/sign-in'>
-                        <Register isOpen={isEditProfilePopupOpen} onRegister={handleRegistration} isInfoTooltipOpen={isInfoTooltipOpen}/>
+                        <Register isOpen={isEditProfilePopupOpen} onRegister={handleRegistration} isInfoTooltipOpen={isInfoTooltipOpen} />
                     </Route>
                     <Route path='/sign-up'>
-                        <Login isOpen={isEditProfilePopupOpen} onAuth={handleAuth}/>
+                        <Login isOpen={isEditProfilePopupOpen} onAuth={handleAuth} />
                     </Route>
                 </Switch>
                 <Footer />
 
-                <InfoTooltip name='tooltip' isOpen={isInfoTooltipOpen} onClose={closeAllPopups} title={message.text} img={message.img}/>
+                <InfoTooltip name='tooltip' isOpen={isInfoTooltipOpen} onClose={closeAllPopups} title={message.text} img={message.img} />
 
                 <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
 

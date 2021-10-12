@@ -73,7 +73,7 @@ class Api {
     }
 
     changeLikeCardStatus(id, isLiked) {
-        return fetch(this._url + `/cards/likes/${id}`, {
+        return fetch(this._url + `/cards/${id}/likes`, {
             method: `${isLiked ? 'PUT' : 'DELETE'}`,
             headers: this._headers
         })
@@ -89,11 +89,15 @@ class Api {
     }
 }
 
+const jwt = localStorage.getItem('token')
+
+console.log(`Это api ${jwt}`)
+
 const api = new Api({
-    url: 'https://mesto.nomoreparties.co/v1/cohort-25',
+    url: 'https://api.mattzenn.nomoredomains.club',
     headers: {
-        authorization: '664aaf42-3a4d-4948-aa52-e5498063f0fe',
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${jwt}`,
+        'Content-Type': 'application/json',
     }
 })
 

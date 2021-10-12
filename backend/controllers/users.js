@@ -6,6 +6,8 @@ const NotFound = require('../errors/NotFound');
 const Conflict = require('../errors/Conflict');
 // const Default = require('../errors/Default');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
@@ -88,25 +90,23 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id },
-        'secret-key', { expiresIn: '7d' });
-
-      res.cookie('jwt', token, {
-        maxAge: 3600000 * 24 * 7,
-        httpOnly: true,
-      })
-        .send({ message: 'Авторизация прошла успешно!' });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key' , { expiresIn: '7d' });
+      console.log(`этоооооооо онннннннн ${token}`)
+      res.send( { token} );
     })
     .catch(next);
 };
 
 const getCurrentUser = (req, res, next) => {
-  User.findById(req.user._id)
+  const userId = req.user._id;
+  console.log(` получаю ${userId}`);
+  
+  User.findById(userId)
     .orFail()
     .catch(() => {
       throw new NotFound('Пользователь с таким id не найден');
     })
-    .then((currentUser) => res.send({ currentUser }))
+    .then((user) => res.send({ data: user }))
     .catch(next);
 };
 

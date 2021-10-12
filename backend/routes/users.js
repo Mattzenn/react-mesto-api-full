@@ -6,8 +6,8 @@ const { userAboutValidation, avatarValidation, idValidation } = require('../midd
 const usersRouter = Router();
 
 usersRouter.get('/users', getUsers);
-usersRouter.get('/users/:_id', idValidation, getUserById);
 usersRouter.get('/users/me', idValidation, getCurrentUser);
+usersRouter.get('/users/:_id', idValidation, getUserById);
 usersRouter.patch('/users/me', userAboutValidation, updateUser);
 usersRouter.patch('/users/me/avatar', avatarValidation, updateAvatar);
 

@@ -5,16 +5,13 @@ const Forbidden = require('../errors/Forbidden');
 
 const getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.send({ data: cards }))
+    .then((cards) => res.send(cards ))
     .catch(next);
 };
 
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
-
-  console.log(name);
-  console.log(link);
 
   Card.create({ name, link, owner })
     .then((card) => res.send(card))
@@ -29,7 +26,6 @@ const createCard = (req, res, next) => {
 const deleteCard = (req, res, next) => {
   const userId = req.user._id;
   const { _id } = req.params;
-  console.log(_id);
 
   Card.findById(_id)
     .orFail()
@@ -54,19 +50,19 @@ const likeCard = (req, res, next) => {
     .orFail(() => {
       throw new NotFound('Карточка с таким id не найдена');
     })
-    .then((likes) => res.send({ data: likes }))
+    .then((likes) => res.send( likes ))
     .catch(next);
 };
 
 const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
-    req.params._id, { $pull: { likes: req.user._id } }, // убрать _id из массива
+    req.params._id, { $pull: { likes: req.user._id } }, 
     { new: true },
   )
     .orFail(() => {
       throw new NotFound('Карточка с таким id не найдена');
     })
-    .then((likes) => res.send({ data: likes }))
+    .then((likes) => res.send( likes ))
     .catch(next);
 };
 
