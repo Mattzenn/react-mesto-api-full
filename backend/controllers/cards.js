@@ -5,7 +5,7 @@ const Forbidden = require('../errors/Forbidden');
 
 const getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.send(cards ))
+    .then((cards) => res.send(cards))
     .catch(next);
 };
 
@@ -50,19 +50,19 @@ const likeCard = (req, res, next) => {
     .orFail(() => {
       throw new NotFound('Карточка с таким id не найдена');
     })
-    .then((likes) => res.send( likes ))
+    .then((likes) => res.send(likes))
     .catch(next);
 };
 
 const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
-    req.params._id, { $pull: { likes: req.user._id } }, 
+    req.params._id, { $pull: { likes: req.user._id } },
     { new: true },
   )
     .orFail(() => {
       throw new NotFound('Карточка с таким id не найдена');
     })
-    .then((likes) => res.send( likes ))
+    .then((likes) => res.send(likes))
     .catch(next);
 };
 

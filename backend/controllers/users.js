@@ -90,17 +90,15 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key' , { expiresIn: '7d' });
-      console.log(`этоооооооо онннннннн ${token}`)
-      res.send( { token} );
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key', { expiresIn: '7d' });
+      res.send({ token });
     })
     .catch(next);
 };
 
 const getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
-  console.log(` получаю ${userId}`);
-  
+
   User.findById(userId)
     .orFail()
     .catch(() => {
